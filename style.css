@@ -1,78 +1,212 @@
 @import url("https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Outfit:wght@100..900&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap");
 
+:root {
+  --color-placeholder: #d9d9d9;
+  --color-text-primary: #4b4b4b;
+  --card-radius: 1.5rem;
+}
+
 * {
   padding: 0;
   margin: 0;
   box-sizing: border-box;
   font-family: "Outfit", serif;
-  border: 1px solid red;
+  /* border: 1px solid red; */
 }
 
-body{
-    background-image: url(img/bg.png);
-    background-repeat: no-repeat;
-    background-position: top center;
+body {
+  background-image: url(img/bg.png);
+  background-repeat: no-repeat;
+  background-position: top center;
 }
 
-header{
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 1rem;
-    padding: 5rem 0;
+header {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: row !important;
+  gap: 1rem;
+  padding: 5rem 0;
 }
 
-button{
-    cursor: pointer;
+button {
+  cursor: pointer;
 }
 
-.container{
-    max-width: 40rem;
-    margin: 0 auto;
+.hidden {
+  display: none !important;
 }
 
-header h1{
-    font-size: 3rem;
-    color: #31509e;
+.container {
+  max-width: 40rem;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
-.budgets{
-    display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 1rem;
+header h1 {
+  font-size: 3rem;
+  color: #31509e;
 }
 
-.budget_card{
-    background-color: #0f379ba8;
-    padding: 1rem;
-    border-radius: 1.5rem;
-    color: white;
-    cursor: pointer;
+.budgets {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1rem;
 }
 
-.budget_name{
-    font-size: 1.25rem;
+.budget_card {
+  background-color: #0f379ba8;
+  width: 100%;
+  padding: 1rem;
+  border-radius: var(--card-radius);
+  color: white;
+  cursor: pointer;
 }
 
-.budget_amount{
-    font-size: 2rem;
-    font-weight: 800;
+.budget_name {
+  font-size: 1.25rem;
 }
 
-.add_budget_btn{
-    height: 6rem;
-    border-radius: 1.5rem;
-    background-color: transparent;
-    font-size: 3rem;
-    font-weight: bold;
-    border: 2px dashed #d9d9d9;
-    color: #d9d9d9;
+.budget_amount {
+  font-size: 2rem;
+  font-weight: 800;
 }
+
+.add_budget_btn {
+  height: 6rem;
+  border-radius: 1.5rem;
+  background-color: transparent;
+  font-size: 3rem;
+  font-weight: bold;
+  border: 2px dashed var(--color-placeholder);
+  color: var(--color-placeholder);
+}
+
+/* Budget Details */
+
+#budget_details {
+  gap: 1rem;
+}
+
+#budget_details .budget_card {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+#budget_details .icon {
+  border: 1px solid #e0e0e06f;
+  color: #e0e0e06f;
+  aspect-ratio: 1/1;
+  width: 4rem;
+  height: 4rem;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+#budget_details i {
+  font-size: 2rem;
+}
+
+/* Back Home */
+
+.back_home {
+  padding: 0.5rem 1rem;
+  border-radius: 50px;
+  background-color: white;
+  border: 1px solid var(--color-placeholder);
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  transform: translateY(-2rem);
+  color: var(--color-text-primary);
+}
+
+#budget_details .back_home .icon-back {
+  font-size: 1rem;
+}
+
+/* Spent Item*/
+
+.add_spent_btn {
+  width: 100%;
+  padding: 1rem;
+  font-size: 1rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: var(--card-radius);
+  border: 2px dashed var(--color-placeholder);
+  background-color: transparent;
+  color: var(--color-placeholder);
+  gap: 1rem;
+}
+
+.add_spent_btn span {
+  font-size: 2rem;
+  font-weight: bold;
+}
+
+.sort_spent{
+  display: flex;
+  justify-content: end;
+  align-items: center;
+  width: 100%;
+  gap: .5rem;
+}
+
+.sort_spent i{
+  font-size: 1rem !important;
+}
+
+.sort_spent select{
+  padding: 0.3rem 0.6rem;
+  border: 1px solid var(--color-placeholder);
+  appearance: none;
+  border-radius: .5rem;
+}
+
+.spent {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.spent_item {
+  padding: 1rem;
+  background-color: transparent;
+  color: var(--color-text-primary);
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  /* align-items: center; */
+  border-bottom: 1px solid var(--color-placeholder);
+  cursor: pointer;
+}
+
+.spent_item:hover {
+  background-color: #f5f5f5;
+}
+
+.spent_item h4 {
+  font-size: 1.25rem;
+}
+
+.spent_item_price {
+  font-size: 1.75rem;
+  font-weight: bold;
+}
+
+/* Responsive */
 
 @media (max-width: 768px) {
-    .budgets{
-        padding: 1rem;
-        grid-template-columns: repeat(1, minmax(0, 1fr));
-    }
+  .budgets {
+    padding: 1rem;
+    grid-template-columns: repeat(1, minmax(0, 1fr));
+  }
 }
-
