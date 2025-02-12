@@ -216,7 +216,6 @@ header h1 {
   justify-content: center;
   align-items: center;
   backdrop-filter: blur(10px);
-  
 }
 
 .modal .card{
@@ -225,7 +224,19 @@ header h1 {
   max-width: 40rem;
   padding: 1rem;
   border-radius: var(--card-radius);
+  animation: slideup .5s ease-in-out;
 
+}
+
+@keyframes slideup {
+  0% {
+    opacity: 0;
+    transform: translateY(2rem);
+  } 
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 .modal_card_heading{
