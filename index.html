@@ -15,7 +15,7 @@
         <img src="img/bag.png" alt="">
         <h1>Budgetku.</h1>
     </header>
-    <main class="container budgets hidden">
+    <main id="budgets" class="container budgets hidden">
         <div class="budget_card">
             <h2 class="budget_name">Makan & Minum</h2>
             <p class="budget_amount">Rp 968.000</p>
@@ -93,7 +93,9 @@
             </div>
         </div>
     </main>
-    <div id="add_budget_form" class="modal hidden">
+
+    <!-- Modal Form Budget-->
+    <div id="budget_form" class="modal hidden">
         <div class="card">
             <div class="modal_card_heading">
                 <h4>Tambah Budget</h4>
@@ -111,7 +113,8 @@
             </form>
         </div>
     </div>
-    <div id="add_spent_form" class="modal hidden">
+    <!-- Modal Form Pengeluaran -->
+    <div id="spent_form" class="modal hidden">
         <div class="card">
             <div class="modal_card_heading">
                 <h4>Tambah Pengeluaran</h4>
@@ -131,6 +134,7 @@
             </form>
         </div>
     </div>
+    <script src="script.js"></script>
 </body>
 
 </html>
