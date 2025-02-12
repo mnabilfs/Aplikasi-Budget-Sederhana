@@ -4,6 +4,8 @@
   --color-placeholder: #d9d9d9;
   --color-text-primary: #4b4b4b;
   --card-radius: 1.5rem;
+  --primary: #31509e;
+  --color-text-secondary: #9e9e9e;
 }
 
 * {
@@ -47,7 +49,7 @@ button {
 
 header h1 {
   font-size: 3rem;
-  color: #31509e;
+  color: var(--primary);
 }
 
 .budgets {
@@ -201,6 +203,90 @@ header h1 {
   font-size: 1.75rem;
   font-weight: bold;
 }
+
+/* Modal */
+
+.modal{
+  background-color: rgba(5, 5, 5, 0.37);
+  position: fixed;
+  top: 0;
+  width: 100%;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  backdrop-filter: blur(10px);
+  
+}
+
+.modal .card{
+  background-color: white;
+  width: 80%;
+  max-width: 40rem;
+  padding: 1rem;
+  border-radius: var(--card-radius);
+
+}
+
+.modal_card_heading{
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  color: var(--primary);
+  margin-bottom: 1rem;
+}
+
+.modal_card_heading i{
+  font-size: 1.5rem;
+  color: #f24949;
+  cursor: pointer;
+}
+
+.modal .card form label{
+  display: block;
+  color: var(--color-text-secondary);
+  margin-bottom: 0.5rem;
+}
+
+.modal .card form input{
+  display: block;
+  width: 100%;
+  font-size: 1.5rem;
+  padding: 1rem;
+  border-radius: 10px;
+  border: 1px solid var(--color-placeholder);
+  margin-bottom: 0.5rem;
+  color: var(--color-text-primary);
+}
+
+.modal form .input_money{
+  color: var(--color-text-secondary);
+  position: relative;
+}
+
+.modal form .input_money span{
+  font-size: 1.5rem;
+  transform: translateY(50%);
+  left: 1rem;
+  position: absolute;
+}
+
+.modal form .input_money input{
+  padding-left: 3.2rem;
+}
+
+.modal form button{
+  margin-top: 5px;
+  padding: .8rem 2rem;
+  font-size: 1.5rem;
+  float: right;
+  border-radius: 10px;
+  background-color: var(--primary);
+  border: none;
+  color: white;
+}
+
+
 
 /* Responsive */
 
