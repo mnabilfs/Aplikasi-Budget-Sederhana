@@ -1,0 +1,36 @@
+[
+    {
+        "nama_budget" : "Makan & Minum",
+        "total" : 100000,
+        "pengeluaran" : [
+            {
+                "nama_pengeluaran" : "Nasi Padang",
+                "tanggal" : "17-01-2024",
+                "jumlah" : 12000
+            },
+            {
+                "nama_pengeluaran" : "Bakso",
+                "tanggal" : "17-01-2024",
+                "jumlah" : 15000
+            }
+        ]
+        
+    },
+    {
+        "nama_budget" : "Nongkrong",
+        "total" : 50000,
+        "pengeluaran" : [
+            {
+                "nama_pengeluaran" : "Kopi",
+                "tanggal" : "17-01-2024",
+                "jumlah" : 12000
+            },
+            {
+                "nama_pengeluaran" : "Siomay",
+                "tanggal" : "17-01-2024",
+                "jumlah" : 15000
+            }
+        ]
+        
+    }
+]
