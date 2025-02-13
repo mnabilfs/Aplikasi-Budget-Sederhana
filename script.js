@@ -8,6 +8,7 @@ const closeModalBudgetBtn = document.querySelector("#budget_form i")
 const addSpentBtn = document.querySelector(".add_spent_btn")
 const spentForm = document.getElementById("spent_form")
 const closeModalSpentBtn = document.querySelector("#spent_form i")
+const notifications = document.getElementById("notifications")
 
 // back to halaman budget
 backHomeBtn.addEventListener("click", () => {
@@ -50,7 +51,6 @@ closeModalSpentBtn.addEventListener("click", () => {
 
 
 // Form Budgets 
-
 function getFormValue(formData) {
     let result = new Object()
 
@@ -81,6 +81,21 @@ function resetInput(){
     })
 }
 
+// Notification
+function showNotification(message){
+    const newNotification = document.createElement("div")
+    newNotification.innerHTML = message
+    newNotification.classList.add("notification")
+    notifications.appendChild(newNotification)
+    setTimeout(() => {
+        newNotification.classList.add("out")
+
+        setTimeout(() => {
+            notifications.removeChild(newNotification)
+        }, 300)
+    }, 4000)
+}
+
 // Submit form budget
 document.querySelector("#budget_form form").addEventListener("submit", (e) => {
     e.preventDefault()
@@ -89,6 +104,7 @@ document.querySelector("#budget_form form").addEventListener("submit", (e) => {
     saveDataBudget(data)
     closeModalBudget()
     resetInput()
+    showNotification(`✅Budget ${data.nama_budget} berhasil disimpan!`)
     
 })
 

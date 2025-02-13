@@ -11,10 +11,14 @@
 </head>
 
 <body>
+    <div id="notifications" class="notification-wapper"></div>
+    <!-- Header -->
     <header class="container">
         <img src="img/bag.png" alt="">
         <h1>Budgetku.</h1>
     </header>
+
+    <!-- Budgets Page -->
     <main id="budgets" class="container budgets hidden">
         <div class="budget_card">
             <h2 class="budget_name">Makan & Minum</h2>
@@ -30,6 +34,8 @@
             +
         </button>
     </main>
+
+    <!-- Budgets Detail -->
     <main id="budget_details" class="container">
         <button class="back_home">
             <i class="ph ph-caret-left icon-back"></i>
@@ -54,6 +60,8 @@
                 <option value="">Terbesar</option>
             </select>
         </div>
+
+        <!-- Spent -->
         <div class="spent">
             <div class="spent_item">
                 <div class="spent_item_description">
@@ -103,11 +111,11 @@
             </div>
             <form action="">
                 <label for="">Nama Budget</label>
-                <input name="nama_budget" type="text">
+                <input required name="nama_budget" type="text">
                 <label for="">Jumlah Budget</label>
                 <div class="input_money">
                     <span>Rp</span>
-                    <input name="total" type="number">
+                    <input required name="total" type="number">
                 </div>
                 <button>Simpan</button>
             </form>
