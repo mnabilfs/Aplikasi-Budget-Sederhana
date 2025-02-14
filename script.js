@@ -1,8 +1,8 @@
 const backHomeBtn = document.querySelector("#budget_details button.back_home")
 const budgetsPage = document.getElementById("budgets")
+renderBudgets()
+
 const budgetsDetailPage = document.querySelector("#budget_details")
-const budgetCards = document.querySelectorAll("#budgets .budget_card")
-const addBudgetButton = document.querySelector("#budgets button")
 const budgetForm = document.getElementById("budget_form")
 const closeModalBudgetBtn = document.querySelector("#budget_form i")
 const addSpentBtn = document.querySelector(".add_spent_btn")
@@ -10,14 +10,12 @@ const spentForm = document.getElementById("spent_form")
 const closeModalSpentBtn = document.querySelector("#spent_form i")
 const notifications = document.getElementById("notifications")
 
-// back to halaman budget
-backHomeBtn.addEventListener("click", () => {
-    budgetsDetailPage.classList.add("hidden")
-    budgetsPage.classList.remove("hidden")
-})
+function selectBudgetCardsAndButton(){
+    const budgetCards = document.querySelectorAll("#budgets .budget_card")
+    const addBudgetButton = document.querySelector("#budgets button")
 
-// klik to budget detail
-budgetCards.forEach((budgetsCard) => {
+    // evenListener klik budget detail card to budget detail 
+    budgetCards.forEach((budgetsCard) => {
     budgetsCard.addEventListener("click", () => {
         budgetsPage.classList.add("hidden")
         budgetsDetailPage.classList.remove("hidden")
@@ -25,10 +23,39 @@ budgetCards.forEach((budgetsCard) => {
     })
 })
 
-// klik to tambah budget
+// evenListener klik to tambah budget
 addBudgetButton.addEventListener("click", () => {
     budgetForm.classList.remove("hidden")
 })
+}
+
+function renderBudgets(){
+const BudgetData = getExistingData()
+const budgetList = BudgetData.map((budget) => {
+    return `<div class="budget_card">
+            <h2 class="budget_name">${budget.nama_budget}</h2>
+            <p class="budget_amount">Rp ${budget.total}</p>
+            <p class="budget_total">Total Rp ${budget.total}</p>
+        </div>`  
+}).concat([`<button class="add_budget_btn">+</button>`]).join("")
+
+budgetsPage.innerHTML = budgetList
+selectBudgetCardsAndButton()
+
+
+}
+
+
+
+
+
+// back to halaman budget
+backHomeBtn.addEventListener("click", () => {
+    budgetsDetailPage.classList.add("hidden")
+    budgetsPage.classList.remove("hidden")
+})
+
+
 
 // Close Modal Budget Form
 function closeModalBudget(){
@@ -105,8 +132,11 @@ document.querySelector("#budget_form form").addEventListener("submit", (e) => {
     closeModalBudget()
     resetInput()
     showNotification(`✅Budget ${data.nama_budget} berhasil disimpan!`)
-    
+    renderBudgets()
 })
+
+
+
 
 
 
