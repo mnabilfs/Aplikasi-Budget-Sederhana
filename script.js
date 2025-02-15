@@ -15,8 +15,11 @@ function selectBudgetCardsAndButton(){
     const addBudgetButton = document.querySelector("#budgets button")
 
     // evenListener klik budget detail card to budget detail 
-    budgetCards.forEach((budgetsCard) => {
-    budgetsCard.addEventListener("click", () => {
+    budgetCards.forEach((card) => {
+    card.addEventListener("click", () => {
+    
+        const budgetId = card.getAttribute("data-budgetId")    
+        renderBudgetsDetail(budgetId)
         budgetsPage.classList.add("hidden")
         budgetsDetailPage.classList.remove("hidden")
     
@@ -29,33 +32,45 @@ addBudgetButton.addEventListener("click", () => {
 })
 }
 
+// Render Budgets
 function renderBudgets(){
 const BudgetData = getExistingData()
 const budgetList = BudgetData.map((budget) => {
-    return `<div class="budget_card">
+    return `<div class="budget_card" data-budgetId=${budget.id}>
             <h2 class="budget_name">${budget.nama_budget}</h2>
             <p class="budget_amount">Rp ${budget.total}</p>
             <p class="budget_total">Total Rp ${budget.total}</p>
         </div>`  
 }).concat([`<button class="add_budget_btn">+</button>`]).join("")
 
-budgetsPage.innerHTML = budgetList
-selectBudgetCardsAndButton()
-
-
+    budgetsPage.innerHTML = budgetList
+    selectBudgetCardsAndButton()
 }
 
+// Render BudgetsDetail
+function renderBudgetsDetail(budgetId){
+    const budgets = getExistingData()
 
+    const currentBudget = budgets.filter((budget) => 
+        budget.id == budgetId
+    )[0]
 
-
+    // Menyesuaikan Detail Listcard dengan Budgets
+    document.querySelector("#budget_details .budget_card h2").innerText =
+        currentBudget.nama_budget
+    
+    document.querySelector("#budget_details .budget_card .budget_amount").innerText =
+        "Rp " + currentBudget.total
+    
+    document.querySelector("#budget_details .budget_card .budget_total").innerText =
+        "Rp " + currentBudget.total
+}
 
 // back to halaman budget
 backHomeBtn.addEventListener("click", () => {
     budgetsDetailPage.classList.add("hidden")
     budgetsPage.classList.remove("hidden")
 })
-
-
 
 // Close Modal Budget Form
 function closeModalBudget(){
@@ -102,6 +117,7 @@ function saveDataBudget(dataBaru){
     localStorage.setItem("budgets", JSON.stringify(existingData))
 }
 
+// Reset Input Form
 function resetInput(){
     document.querySelectorAll("form input").forEach((input) => {
         input.value = ''
@@ -128,7 +144,12 @@ document.querySelector("#budget_form form").addEventListener("submit", (e) => {
     e.preventDefault()
 
     const data = getFormValue(new FormData(e.target))
-    saveDataBudget(data)
+    const dataWithId = {
+        id: generateId(),
+        ...data,
+    }
+    
+    saveDataBudget(dataWithId)
     closeModalBudget()
     resetInput()
     showNotification(`✅Budget ${data.nama_budget} berhasil disimpan!`)
@@ -136,7 +157,10 @@ document.querySelector("#budget_form form").addEventListener("submit", (e) => {
 })
 
 
-
+// Generate Id unik 
+function generateId(){
+    return new Date().getTime()
+}
 
 
 
