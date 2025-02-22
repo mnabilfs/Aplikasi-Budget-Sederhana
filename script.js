@@ -49,11 +49,10 @@ const budgetList = BudgetData.map((budget) => {
 
 // Render BudgetsDetail
 function renderBudgetsDetail(budgetId){
-    const budgets = getExistingData()
 
-    const currentBudget = budgets.filter((budget) => 
-        budget.id == budgetId
-    )[0]
+    const currentBudget = getBudgetById(budgetId)
+
+    document.querySelector("#budget_details .budget_card").setAttribute("data-budgetid", budgetId)
 
     // Menyesuaikan Detail Listcard dengan Budgets
     document.querySelector("#budget_details .budget_card h2").innerText =
@@ -86,10 +85,15 @@ addSpentBtn.addEventListener("click", () => {
     spentForm.classList.remove("hidden")
 })
 
-// Close Modal Spent Form
+// Close Btn Modal Spent Form
 closeModalSpentBtn.addEventListener("click", () => {
-    spentForm.classList.add("hidden")
+    closeModalPengeluaran()
 })
+
+// Close Pengeluaran
+function closeModalPengeluaran(){
+    spentForm.classList.add("hidden")
+}
 
 
 // Form Budgets 
@@ -108,6 +112,12 @@ function getFormValue(formData) {
 
 function getExistingData(){
     return JSON.parse(localStorage.getItem("budgets")) ?? []
+}
+
+function getBudgetById(id){
+    const budgets = getExistingData()
+
+    return budgets.filter((budget) => budget.id == id)[0]
 }
 
 function saveDataBudget(dataBaru){
@@ -155,6 +165,44 @@ document.querySelector("#budget_form form").addEventListener("submit", (e) => {
     showNotification(`✅Budget ${data.nama_budget} berhasil disimpan!`)
     renderBudgets()
 })
+
+// Submit Pengeluaran
+document.querySelector("#spent_form form").addEventListener("submit", (e) =>{
+    e.preventDefault()
+    const data = getFormValue(new FormData(e.target))
+
+    addPengeluaran(data)
+    closeModalPengeluaran()
+    resetInput()
+    showNotification(`✅ Pengeluaran ${data.nama_pengeluaran} berhasil ditambahkan`)
+})
+
+
+// Tambah Pengeluaran
+function addPengeluaran(data){
+ 
+    const budgetId = document.querySelector("#budget_details .budget_card").getAttribute("data-budgetid")
+    
+    const currentBudget = getBudgetById(budgetId)
+
+    const currentSpent = currentBudget.pengeluaran ?? []
+
+    const budgetWithSpent = {
+        ...currentBudget, 
+        pengeluaran: [...currentSpent, data]}
+
+    const allBudgets = getExistingData()
+
+    const updateBudgets = allBudgets.map((budget) => {
+        if(budget.id == budgetId) {
+            return budgetWithSpent
+        } else {
+            return budget
+        }
+    })
+
+    localStorage.setItem("budgets", JSON.stringify(updateBudgets))
+}
 
 
 // Generate Id unik 
