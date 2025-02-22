@@ -18,7 +18,9 @@ function selectBudgetCardsAndButton(){
     budgetCards.forEach((card) => {
     card.addEventListener("click", () => {
     
-        const budgetId = card.getAttribute("data-budgetId")    
+        const budgetId = card.getAttribute("data-budgetId") 
+        
+        renderPengeluaran(budgetId)
         renderBudgetsDetail(budgetId)
         budgetsPage.classList.add("hidden")
         budgetsDetailPage.classList.remove("hidden")
@@ -45,6 +47,24 @@ const budgetList = BudgetData.map((budget) => {
 
     budgetsPage.innerHTML = budgetList
     selectBudgetCardsAndButton()
+}
+
+function renderPengeluaran(budgetId){
+    const {pengeluaran} = getBudgetById(budgetId)
+
+    const listPengeluaran = pengeluaran.map((item) => {
+        return `<div class="spent_item">
+                <div class="spent_item_description">
+                    <h4>${item.nama_pengeluaran}</h4>
+                    <p>${item.tanggal}</p>
+                </div>
+                <div class="spent_item_price">
+                    <p>Rp ${item.jumlah}</p>
+                </div>
+            </div>`
+    }).join("")
+
+    document.querySelector("#budget_details .spent").innerHTML = listPengeluaran
 }
 
 // Render BudgetsDetail
@@ -169,12 +189,15 @@ document.querySelector("#budget_form form").addEventListener("submit", (e) => {
 // Submit Pengeluaran
 document.querySelector("#spent_form form").addEventListener("submit", (e) =>{
     e.preventDefault()
+
+    const budgetId = document.querySelector("#budget_details .budget_card").getAttribute("data-budgetid")
     const data = getFormValue(new FormData(e.target))
 
     addPengeluaran(data)
     closeModalPengeluaran()
     resetInput()
     showNotification(`✅ Pengeluaran ${data.nama_pengeluaran} berhasil ditambahkan`)
+    renderPengeluaran(budgetId)
 })
 
 
