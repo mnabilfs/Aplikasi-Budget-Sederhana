@@ -45,8 +45,8 @@ function renderBudgets(){
 
     return `<div class="budget_card" data-budgetId=${budget.id}>
             <h2 class="budget_name">${budget.nama_budget}</h2>
-            <p class="budget_amount">Rp ${sisaBudget}</p>
-            <p class="budget_total">Total Rp ${budget.total}</p>
+            <p class="budget_amount">${formatRupiah(sisaBudget)}</p>
+            <p class="budget_total">Total ${formatRupiah(budget.total)}</p>
         </div>`  
 }).concat([`<button class="add_budget_btn">+</button>`]).join("")
 
@@ -72,7 +72,7 @@ function renderPengeluaran(budgetId){
                     <p>${item.tanggal}</p>
                 </div>
                 <div class="spent_item_price">
-                    <p>Rp ${item.jumlah}</p>
+                    <p>${formatRupiah(item.jumlah)}</p>
                 </div>
             </div>`
     }).join("")
@@ -94,10 +94,10 @@ function renderBudgetsDetail(budgetId){
         currentBudget.nama_budget
     
     document.querySelector("#budget_details .budget_card .budget_amount").innerText =
-        "Rp " + sisaBudget
+        formatRupiah(sisaBudget) 
     
     document.querySelector("#budget_details .budget_card .budget_total").innerText =
-        "Rp " + currentBudget.total
+        formatRupiah(currentBudget.total)
 }
 
 // back to halaman budget
@@ -256,4 +256,12 @@ function hitungSisaBudget(dataBudget){
     
     return +dataBudget.total - totalPengeluaran
     
+}
+
+function formatRupiah(angka){
+    return new Intl.NumberFormat("id-ID", {
+        style: "currency",
+        currency: "IDR",
+        maximumFractionDigits: 0
+    }).format(angka)
 }
