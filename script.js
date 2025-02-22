@@ -36,11 +36,16 @@ addBudgetButton.addEventListener("click", () => {
 
 // Render Budgets
 function renderBudgets(){
-const BudgetData = getExistingData()
-const budgetList = BudgetData.map((budget) => {
+
+    const BudgetData = getExistingData()
+
+    const budgetList = BudgetData.map((budget) => {
+    
+    const sisaBudget = hitungSisaBudget(budget)
+
     return `<div class="budget_card" data-budgetId=${budget.id}>
             <h2 class="budget_name">${budget.nama_budget}</h2>
-            <p class="budget_amount">Rp ${budget.total}</p>
+            <p class="budget_amount">Rp ${sisaBudget}</p>
             <p class="budget_total">Total Rp ${budget.total}</p>
         </div>`  
 }).concat([`<button class="add_budget_btn">+</button>`]).join("")
@@ -51,6 +56,14 @@ const budgetList = BudgetData.map((budget) => {
 
 function renderPengeluaran(budgetId){
     const {pengeluaran} = getBudgetById(budgetId)
+
+    // Debugging for error undefined pengeluaran
+    const budget = getBudgetById(budgetId)
+    if (!budget || !budget.pengeluaran) {
+        console.warn("Budget tidak ditemukan atau belum memiliki pengeluaran.")
+        document.querySelector("#budget_details .spent").innerHTML = "<p>Belum ada pengeluaran.</p>"
+        return
+    }
 
     const listPengeluaran = pengeluaran.map((item) => {
         return `<div class="spent_item">
@@ -72,6 +85,8 @@ function renderBudgetsDetail(budgetId){
 
     const currentBudget = getBudgetById(budgetId)
 
+    const sisaBudget = hitungSisaBudget(currentBudget)
+
     document.querySelector("#budget_details .budget_card").setAttribute("data-budgetid", budgetId)
 
     // Menyesuaikan Detail Listcard dengan Budgets
@@ -79,7 +94,7 @@ function renderBudgetsDetail(budgetId){
         currentBudget.nama_budget
     
     document.querySelector("#budget_details .budget_card .budget_amount").innerText =
-        "Rp " + currentBudget.total
+        "Rp " + sisaBudget
     
     document.querySelector("#budget_details .budget_card .budget_total").innerText =
         "Rp " + currentBudget.total
@@ -234,4 +249,11 @@ function generateId(){
 }
 
 
-
+// Calculate Sisa Budget
+function hitungSisaBudget(dataBudget){
+    const totalPengeluaran = dataBudget.pengeluaran?.map((item) => 
+        +item.jumlah).reduce((jumlah, total) => jumlah + total)
+    
+    return +dataBudget.total - totalPengeluaran
+    
+}
