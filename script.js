@@ -1,72 +1,79 @@
-const backHomeBtn = document.querySelector("#budget_details button.back_home")
-const budgetsPage = document.getElementById("budgets")
-renderBudgets()
+const backHomeBtn = document.querySelector("#budget_details button.back_home");
+const budgetsPage = document.getElementById("budgets");
+renderBudgets();
 
-const budgetsDetailPage = document.querySelector("#budget_details")
-const budgetForm = document.getElementById("budget_form")
-const closeModalBudgetBtn = document.querySelector("#budget_form i")
-const addSpentBtn = document.querySelector(".add_spent_btn")
-const spentForm = document.getElementById("spent_form")
-const closeModalSpentBtn = document.querySelector("#spent_form i")
-const notifications = document.getElementById("notifications")
+const budgetsDetailPage = document.querySelector("#budget_details");
+const budgetForm = document.getElementById("budget_form");
+const closeModalBudgetBtn = document.querySelector("#budget_form i");
+const addSpentBtn = document.querySelector(".add_spent_btn");
+const spentForm = document.getElementById("spent_form");
+const closeModalSpentBtn = document.querySelector("#spent_form i");
+const notifications = document.getElementById("notifications");
+const updateBudgetButton = document.querySelector(
+  "#budget_details .budget_card .icon"
+)
 
-function selectBudgetCardsAndButton(){
-    const budgetCards = document.querySelectorAll("#budgets .budget_card")
-    const addBudgetButton = document.querySelector("#budgets button")
+updateBudgetButton.addEventListener("click", () => {
+  openUpdateBudget();
+})
 
-    // evenListener klik budget detail card to budget detail 
-    budgetCards.forEach((card) => {
+function selectBudgetCardsAndButton() {
+  const budgetCards = document.querySelectorAll("#budgets .budget_card");
+  const addBudgetButton = document.querySelector("#budgets button");
+
+  // evenListener klik budget detail card to budget detail
+  budgetCards.forEach((card) => {
     card.addEventListener("click", () => {
-    
-        const budgetId = card.getAttribute("data-budgetId") 
-        
-        renderPengeluaran(budgetId)
-        renderBudgetsDetail(budgetId)
-        budgetsPage.classList.add("hidden")
-        budgetsDetailPage.classList.remove("hidden")
-    
-    })
-})
+      const budgetId = card.getAttribute("data-budgetId");
 
-// evenListener klik to tambah budget
-addBudgetButton.addEventListener("click", () => {
-    budgetForm.classList.remove("hidden")
-})
+      renderPengeluaran(budgetId);
+      renderBudgetsDetail(budgetId);
+      budgetsPage.classList.add("hidden");
+      budgetsDetailPage.classList.remove("hidden");
+    });
+  });
+
+  // evenListener klik to tambah budget
+  addBudgetButton.addEventListener("click", () => {
+    openCreateBudget()
+  });
 }
 
 // Render Budgets
-function renderBudgets(){
+function renderBudgets() {
+  const BudgetData = getExistingData();
 
-    const BudgetData = getExistingData()
-
-    const budgetList = BudgetData.map((budget) => {
-    
-    const sisaBudget = hitungSisaBudget(budget)
+  const budgetList = BudgetData.map((budget) => {
+    const sisaBudget = hitungSisaBudget(budget);
 
     return `<div class="budget_card" data-budgetId=${budget.id}>
             <h2 class="budget_name">${budget.nama_budget}</h2>
             <p class="budget_amount">${formatRupiah(sisaBudget)}</p>
             <p class="budget_total">Total ${formatRupiah(budget.total)}</p>
-        </div>`  
-}).concat([`<button class="add_budget_btn">+</button>`]).join("")
+        </div>`;
+  })
+    .concat([`<button class="add_budget_btn">+</button>`])
+    .join("");
 
-    budgetsPage.innerHTML = budgetList
-    selectBudgetCardsAndButton()
+  budgetsPage.innerHTML = budgetList;
+  selectBudgetCardsAndButton();
 }
 
-function renderPengeluaran(budgetId){
-    const {pengeluaran} = getBudgetById(budgetId)
+function renderPengeluaran(budgetId) {
+  const { pengeluaran } = getBudgetById(budgetId);
 
-    // Debugging for error undefined pengeluaran
-    const budget = getBudgetById(budgetId)
-    if (!budget || !budget.pengeluaran) {
-        console.warn("Budget tidak ditemukan atau belum memiliki pengeluaran.")
-        document.querySelector("#budget_details .spent").innerHTML = "<p>Belum ada pengeluaran.</p>"
-        return
-    }
+  // Debugging for error undefined pengeluaran
+  // const budget = getBudgetById(budgetId);
+  // if (!budget || !budget.pengeluaran) {
+  //   console.warn("Budget tidak ditemukan atau belum memiliki pengeluaran.");
+  //   document.querySelector("#budget_details .spent").innerHTML =
+  //     "<p>Belum ada pengeluaran.</p>";
+  //   return;
+  // }
 
-    const listPengeluaran = pengeluaran.map((item) => {
-        return `<div class="spent_item">
+  const listPengeluaran = pengeluaran
+    ?.map((item) => {
+      return `<div class="spent_item">
                 <div class="spent_item_description">
                     <h4>${item.nama_pengeluaran}</h4>
                     <p>${item.tanggal}</p>
@@ -74,194 +81,260 @@ function renderPengeluaran(budgetId){
                 <div class="spent_item_price">
                     <p>${formatRupiah(item.jumlah)}</p>
                 </div>
-            </div>`
-    }).join("")
+            </div>`;
+    })
+    .join("") ?? null
 
-    document.querySelector("#budget_details .spent").innerHTML = listPengeluaran
+  document.querySelector("#budget_details .spent").innerHTML = listPengeluaran;
 }
 
 // Render BudgetsDetail
-function renderBudgetsDetail(budgetId){
+function renderBudgetsDetail(budgetId) {
+  const currentBudget = getBudgetById(budgetId);
 
-    const currentBudget = getBudgetById(budgetId)
+  const sisaBudget = hitungSisaBudget(currentBudget);
 
-    const sisaBudget = hitungSisaBudget(currentBudget)
+  document
+    .querySelector("#budget_details .budget_card")
+    .setAttribute("data-budgetid", budgetId);
 
-    document.querySelector("#budget_details .budget_card").setAttribute("data-budgetid", budgetId)
+  // Menyesuaikan Detail Listcard dengan Budgets
+  document.querySelector("#budget_details .budget_card h2").innerText =
+    currentBudget.nama_budget;
 
-    // Menyesuaikan Detail Listcard dengan Budgets
-    document.querySelector("#budget_details .budget_card h2").innerText =
-        currentBudget.nama_budget
-    
-    document.querySelector("#budget_details .budget_card .budget_amount").innerText =
-        formatRupiah(sisaBudget) 
-    
-    document.querySelector("#budget_details .budget_card .budget_total").innerText =
-        formatRupiah(currentBudget.total)
+  document.querySelector(
+    "#budget_details .budget_card .budget_amount"
+  ).innerText = formatRupiah(sisaBudget);
+
+  document.querySelector(
+    "#budget_details .budget_card .budget_total"
+  ).innerText = formatRupiah(currentBudget.total);
 }
 
-// back to halaman budget
+// back to halaman utama
 backHomeBtn.addEventListener("click", () => {
-    budgetsDetailPage.classList.add("hidden")
-    budgetsPage.classList.remove("hidden")
-})
+  budgetsDetailPage.classList.add("hidden");
+  budgetsPage.classList.remove("hidden");
+  renderBudgets()
+});
 
 // Close Modal Budget Form
-function closeModalBudget(){
-    budgetForm.classList.add("hidden")
+function closeModalBudget() {
+  budgetForm.classList.add("hidden");
 }
 
 closeModalBudgetBtn.addEventListener("click", () => {
-    closeModalBudget()
+  closeModalBudget();
 })
+
+function openCreateBudget(){
+  document.querySelector("#budget_form h4").innerHTML = "Tambah Budget"
+  resetInput()
+  openModalBudget()
+}
+
+function openUpdateBudget(){
+  document.querySelector("#budget_form h4").innerHTML = "Update Budget"
+  
+  const budgetId = document.querySelector("#budget_details .budget_card").getAttribute("data-budgetid")
+  const currentBudget = getBudgetById(budgetId)
+  
+  // set nama budget
+  document.getElementById("nama_budget").value = currentBudget.nama_budget
+  
+  // set total budget
+  document.getElementById("total_budget").value = currentBudget.total
+
+  // set id budget
+  document.getElementById("budget_id").value = currentBudget.id
+
+  openModalBudget()
+}
+
+// Open Modal Budget
+function openModalBudget() {
+  budgetForm.classList.remove("hidden")
+}
 
 // klik to spent form
 addSpentBtn.addEventListener("click", () => {
-    spentForm.classList.remove("hidden")
-})
+  spentForm.classList.remove("hidden");
+});
 
 // Close Btn Modal Spent Form
 closeModalSpentBtn.addEventListener("click", () => {
-    closeModalPengeluaran()
-})
+  closeModalPengeluaran();
+});
 
 // Close Pengeluaran
-function closeModalPengeluaran(){
-    spentForm.classList.add("hidden")
+function closeModalPengeluaran() {
+  spentForm.classList.add("hidden");
 }
 
-
-// Form Budgets 
+// Form Budgets
 function getFormValue(formData) {
-    let result = new Object()
+  let result = new Object();
 
-    for (const data of formData.entries()){
-        const [key, value] = data
+  for (const data of formData.entries()) {
+    const [key, value] = data;
 
-        Object.assign(result, 
-            {[key]: value}
-        )
-    }
-    return result
+    Object.assign(result, { [key]: value });
+  }
+  return result;
 }
 
-function getExistingData(){
-    return JSON.parse(localStorage.getItem("budgets")) ?? []
+function getExistingData() {
+  return JSON.parse(localStorage.getItem("budgets")) ?? [];
 }
 
-function getBudgetById(id){
-    const budgets = getExistingData()
+function getBudgetById(id) {
+  const budgets = getExistingData();
 
-    return budgets.filter((budget) => budget.id == id)[0]
+  return budgets.filter((budget) => budget.id == id)[0];
 }
 
-function saveDataBudget(dataBaru){
-    const existingData = getExistingData()
-    existingData.push(dataBaru)
-    
-    localStorage.setItem("budgets", JSON.stringify(existingData))
+function addNewBudget(dataBaru) {
+
+  const dataWithId = {
+    id: generateId(),
+    ...dataBaru,
+  }
+
+  const existingData = getExistingData()
+
+  existingData.push(dataWithId)
+  saveBudget(existingData)
 }
 
 // Reset Input Form
-function resetInput(){
-    document.querySelectorAll("form input").forEach((input) => {
-        input.value = ''
-    })
+function resetInput() {
+  document.querySelectorAll("form input").forEach((input) => {
+    input.value = "";
+  });
 }
 
 // Notification
-function showNotification(message){
-    const newNotification = document.createElement("div")
-    newNotification.innerHTML = message
-    newNotification.classList.add("notification")
-    notifications.appendChild(newNotification)
-    setTimeout(() => {
-        newNotification.classList.add("out")
+function showNotification(message) {
+  const newNotification = document.createElement("div");
+  newNotification.innerHTML = message;
+  newNotification.classList.add("notification");
+  notifications.appendChild(newNotification);
+  setTimeout(() => {
+    newNotification.classList.add("out");
 
-        setTimeout(() => {
-            notifications.removeChild(newNotification)
-        }, 300)
-    }, 4000)
+    setTimeout(() => {
+      notifications.removeChild(newNotification);
+    }, 300);
+  }, 4000);
+}
+
+function updateBudget(dataBaru, budgetId){
+
+  const existingData = getExistingData()
+  
+  const updatedBudget = existingData?.map((budget) => {
+    if(budget.id == budgetId){
+      return {id: budgetId, ...dataBaru, pengeluaran: budget.pengeluaran}
+    }
+    return budget
+  })
+
+  saveBudget(updatedBudget)
+  renderBudgetsDetail(budgetId)
+  
 }
 
 // Submit form budget
 document.querySelector("#budget_form form").addEventListener("submit", (e) => {
-    e.preventDefault()
+  e.preventDefault();
 
-    const data = getFormValue(new FormData(e.target))
-    const dataWithId = {
-        id: generateId(),
-        ...data,
-    }
-    
-    saveDataBudget(dataWithId)
-    closeModalBudget()
-    resetInput()
-    showNotification(`✅Budget ${data.nama_budget} berhasil disimpan!`)
-    renderBudgets()
-})
+  const data = getFormValue(new FormData(e.target));
+  
+  const idBudget = document.getElementById("budget_id").value
+
+  if(idBudget){
+    updateBudget(data, idBudget)
+  } else {
+    addNewBudget(data)
+  }
+
+  closeModalBudget();
+  resetInput();
+  showNotification(`✅Budget ${data.nama_budget} berhasil disimpan!`);
+  renderBudgets();
+});
 
 // Submit Pengeluaran
-document.querySelector("#spent_form form").addEventListener("submit", (e) =>{
-    e.preventDefault()
+document.querySelector("#spent_form form").addEventListener("submit", (e) => {
+  e.preventDefault();
 
-    const budgetId = document.querySelector("#budget_details .budget_card").getAttribute("data-budgetid")
-    const data = getFormValue(new FormData(e.target))
+  const budgetId = document
+    .querySelector("#budget_details .budget_card")
+    .getAttribute("data-budgetid");
+  const data = getFormValue(new FormData(e.target));
 
-    addPengeluaran(data)
-    closeModalPengeluaran()
-    resetInput()
-    showNotification(`✅ Pengeluaran ${data.nama_pengeluaran} berhasil ditambahkan`)
-    renderPengeluaran(budgetId)
-})
-
+  addPengeluaran(data);
+  closeModalPengeluaran();
+  resetInput();
+  showNotification(
+    `✅ Pengeluaran ${data.nama_pengeluaran} berhasil ditambahkan`
+  );
+  renderBudgetsDetail(budgetId)
+  renderPengeluaran(budgetId);
+});
 
 // Tambah Pengeluaran
-function addPengeluaran(data){
- 
-    const budgetId = document.querySelector("#budget_details .budget_card").getAttribute("data-budgetid")
-    
-    const currentBudget = getBudgetById(budgetId)
+function addPengeluaran(data) {
+  const budgetId = document
+    .querySelector("#budget_details .budget_card")
+    .getAttribute("data-budgetid");
 
-    const currentSpent = currentBudget.pengeluaran ?? []
+  const currentBudget = getBudgetById(budgetId);
 
-    const budgetWithSpent = {
-        ...currentBudget, 
-        pengeluaran: [...currentSpent, data]}
+  const currentSpent = currentBudget.pengeluaran ?? [];
 
-    const allBudgets = getExistingData()
+  const budgetWithSpent = {
+    ...currentBudget,
+    pengeluaran: [...currentSpent, data],
+  };
 
-    const updateBudgets = allBudgets.map((budget) => {
-        if(budget.id == budgetId) {
-            return budgetWithSpent
-        } else {
-            return budget
-        }
-    })
+  const allBudgets = getExistingData();
 
-    localStorage.setItem("budgets", JSON.stringify(updateBudgets))
+  const updatedBudgets = allBudgets.map((budget) => {
+    if (budget.id == budgetId) {
+      return budgetWithSpent;
+    } else {
+      return budget
+    }
+  })
+
+  saveBudget(updatedBudgets)
 }
 
-
-// Generate Id unik 
-function generateId(){
-    return new Date().getTime()
+// Generate Id unik
+function generateId() {
+  return new Date().getTime();
 }
-
 
 // Calculate Sisa Budget
-function hitungSisaBudget(dataBudget){
-    const totalPengeluaran = dataBudget.pengeluaran?.map((item) => 
-        +item.jumlah).reduce((jumlah, total) => jumlah + total)
-    
-    return +dataBudget.total - totalPengeluaran
-    
+function hitungSisaBudget(dataBudget) {
+  const totalPengeluaran = dataBudget.pengeluaran
+    ?.map((item) => +item.jumlah)
+    .reduce((jumlah, total) => jumlah + total) ?? 0
+
+  return +dataBudget.total - totalPengeluaran
 }
 
-function formatRupiah(angka){
-    return new Intl.NumberFormat("id-ID", {
-        style: "currency",
-        currency: "IDR",
-        maximumFractionDigits: 0
-    }).format(angka)
+// Format Satuan Rupiah
+function formatRupiah(angka) {
+  return new Intl.NumberFormat("id-ID", {
+    style: "currency",
+    currency: "IDR",
+    maximumFractionDigits: 0,
+  }).format(angka);
+}
+
+function saveBudget(budgets){
+  localStorage.setItem("budgets", JSON.stringify(budgets));
+
 }

@@ -60,12 +60,13 @@
                 <i class="ph-fill ph-x-circle"></i>
             </div>
             <form action="">
-                <label for="">Nama Budget</label>
-                <input required name="nama_budget" type="text">
-                <label for="">Jumlah Budget</label>
+                <input type="hidden" id="budget_id">
+                <label for="nama_budget">Nama Budget</label>
+                <input id="nama_budget" required name="nama_budget" type="text">
+                <label for="total_budget">Jumlah Budget</label>
                 <div class="input_money">
                     <span>Rp</span>
-                    <input required name="total" type="number">
+                    <input id="total_budget" required name="total" type="number">
                 </div>
                 <button>Simpan</button>
             </form>
