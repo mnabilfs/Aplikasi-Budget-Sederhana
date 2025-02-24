@@ -11,11 +11,11 @@ const closeModalSpentBtn = document.querySelector("#spent_form i");
 const notifications = document.getElementById("notifications");
 const updateBudgetButton = document.querySelector(
   "#budget_details .budget_card .icon"
-)
+);
 
 updateBudgetButton.addEventListener("click", () => {
   openUpdateBudget();
-})
+});
 
 function selectBudgetCardsAndButton() {
   const budgetCards = document.querySelectorAll("#budgets .budget_card");
@@ -35,7 +35,7 @@ function selectBudgetCardsAndButton() {
 
   // evenListener klik to tambah budget
   addBudgetButton.addEventListener("click", () => {
-    openCreateBudget()
+    openCreateBudget();
   });
 }
 
@@ -71,9 +71,10 @@ function renderPengeluaran(budgetId) {
   //   return;
   // }
 
-  const listPengeluaran = pengeluaran
-    ?.map((item) => {
-      return `<div class="spent_item">
+  const listPengeluaran =
+    pengeluaran
+      ?.map((item) => {
+        return `<div class="spent_item" data-pengeluaranid="${item.id}">
                 <div class="spent_item_description">
                     <h4>${item.nama_pengeluaran}</h4>
                     <p>${item.tanggal}</p>
@@ -82,10 +83,21 @@ function renderPengeluaran(budgetId) {
                     <p>${formatRupiah(item.jumlah)}</p>
                 </div>
             </div>`;
-    })
-    .join("") ?? null
+      })
+      .join("") ?? null;
 
   document.querySelector("#budget_details .spent").innerHTML = listPengeluaran;
+
+  document
+    .querySelectorAll("#budget_details .spent .spent_item")
+    .forEach((element) => {
+      element.addEventListener("click", () => {
+        openUpdatePengeluaran(
+          element.getAttribute("data-pengeluaranid"),
+          pengeluaran
+        );
+      });
+    });
 }
 
 // Render BudgetsDetail
@@ -115,7 +127,7 @@ function renderBudgetsDetail(budgetId) {
 backHomeBtn.addEventListener("click", () => {
   budgetsDetailPage.classList.add("hidden");
   budgetsPage.classList.remove("hidden");
-  renderBudgets()
+  renderBudgets();
 });
 
 // Close Modal Budget Form
@@ -125,46 +137,83 @@ function closeModalBudget() {
 
 closeModalBudgetBtn.addEventListener("click", () => {
   closeModalBudget();
-})
+});
 
-function openCreateBudget(){
-  document.querySelector("#budget_form h4").innerHTML = "Tambah Budget"
-  resetInput()
-  openModalBudget()
+function openCreateBudget() {
+  document.querySelector("#budget_form h4").innerHTML = "Tambah Budget";
+  resetInput();
+  openModalBudget();
 }
 
-function openUpdateBudget(){
-  document.querySelector("#budget_form h4").innerHTML = "Update Budget"
-  
-  const budgetId = document.querySelector("#budget_details .budget_card").getAttribute("data-budgetid")
-  const currentBudget = getBudgetById(budgetId)
-  
+function openUpdateBudget() {
+  document.querySelector("#budget_form h4").innerHTML = "Update Budget";
+
+  const budgetId = document
+    .querySelector("#budget_details .budget_card")
+    .getAttribute("data-budgetid");
+  const currentBudget = getBudgetById(budgetId);
+
   // set nama budget
-  document.getElementById("nama_budget").value = currentBudget.nama_budget
-  
+  document.getElementById("nama_budget").value = currentBudget.nama_budget;
+
   // set total budget
-  document.getElementById("total_budget").value = currentBudget.total
+  document.getElementById("total_budget").value = currentBudget.total;
 
   // set id budget
-  document.getElementById("budget_id").value = currentBudget.id
+  document.getElementById("budget_id").value = currentBudget.id;
 
-  openModalBudget()
+  openModalBudget();
 }
 
 // Open Modal Budget
 function openModalBudget() {
-  budgetForm.classList.remove("hidden")
+  budgetForm.classList.remove("hidden");
 }
 
-// klik to spent form
+// klik tambah pengeluaran
 addSpentBtn.addEventListener("click", () => {
-  spentForm.classList.remove("hidden");
+  openCreatePengeluaran();
 });
 
-// Close Btn Modal Spent Form
+// Close form pengeluaran
 closeModalSpentBtn.addEventListener("click", () => {
   closeModalPengeluaran();
 });
+
+function openCreatePengeluaran() {
+  document.querySelector("#spent_form h4").innerHTML = "Tambah Pengeluaran";
+  resetInput();
+  openModalPengeluaran();
+}
+
+function openUpdatePengeluaran(pengeluaranId, pengeluaran) {
+  document.querySelector("#spent_form h4").innerHTML = "Update Pengeluaran";
+
+  const currentPengeluaran = pengeluaran?.filter(
+    (item) => item.id == pengeluaranId
+  )[0];
+
+  // set nama pengeluaran
+  document.getElementById("nama_pengeluaran").value =
+    currentPengeluaran.nama_pengeluaran;
+
+  // set jumlah pengeluaran
+  document.getElementById("jumlah_pengeluaran").value =
+    currentPengeluaran.jumlah;
+
+  // set tanggal pengeluaran
+  document.getElementById("tanggal_pengeluaran").value =
+    currentPengeluaran.tanggal;
+
+  // set id pengeluaran
+  document.getElementById("id_pengeluaran").value = currentPengeluaran.id;
+
+  openModalPengeluaran();
+}
+
+function openModalPengeluaran() {
+  spentForm.classList.remove("hidden");
+}
 
 // Close Pengeluaran
 function closeModalPengeluaran() {
@@ -194,16 +243,15 @@ function getBudgetById(id) {
 }
 
 function addNewBudget(dataBaru) {
-
   const dataWithId = {
     id: generateId(),
     ...dataBaru,
-  }
+  };
 
-  const existingData = getExistingData()
+  const existingData = getExistingData();
 
-  existingData.push(dataWithId)
-  saveBudget(existingData)
+  existingData.push(dataWithId);
+  saveBudget(existingData);
 }
 
 // Reset Input Form
@@ -228,20 +276,18 @@ function showNotification(message) {
   }, 4000);
 }
 
-function updateBudget(dataBaru, budgetId){
+function updateBudget(dataBaru, budgetId) {
+  const existingData = getExistingData();
 
-  const existingData = getExistingData()
-  
   const updatedBudget = existingData?.map((budget) => {
-    if(budget.id == budgetId){
-      return {id: budgetId, ...dataBaru, pengeluaran: budget.pengeluaran}
+    if (budget.id == budgetId) {
+      return { id: budgetId, ...dataBaru, pengeluaran: budget.pengeluaran };
     }
-    return budget
-  })
+    return budget;
+  });
 
-  saveBudget(updatedBudget)
-  renderBudgetsDetail(budgetId)
-  
+  saveBudget(updatedBudget);
+  renderBudgetsDetail(budgetId);
 }
 
 // Submit form budget
@@ -249,13 +295,13 @@ document.querySelector("#budget_form form").addEventListener("submit", (e) => {
   e.preventDefault();
 
   const data = getFormValue(new FormData(e.target));
-  
-  const idBudget = document.getElementById("budget_id").value
 
-  if(idBudget){
-    updateBudget(data, idBudget)
+  const idBudget = document.getElementById("budget_id").value;
+
+  if (idBudget) {
+    updateBudget(data, idBudget);
   } else {
-    addNewBudget(data)
+    addNewBudget(data);
   }
 
   closeModalBudget();
@@ -271,15 +317,23 @@ document.querySelector("#spent_form form").addEventListener("submit", (e) => {
   const budgetId = document
     .querySelector("#budget_details .budget_card")
     .getAttribute("data-budgetid");
+
   const data = getFormValue(new FormData(e.target));
 
-  addPengeluaran(data);
+  const pengeluaranId = document.getElementById("id_pengeluaran").value;
+
+  if (pengeluaranId) {
+    updatePengeluaran(pengeluaranId, data);
+  } else {
+    addPengeluaran(data);
+  }
+
   closeModalPengeluaran();
   resetInput();
   showNotification(
-    `✅ Pengeluaran ${data.nama_pengeluaran} berhasil ditambahkan`
+    `✅ Pengeluaran ${data.nama_pengeluaran} berhasil disimpan!`
   );
-  renderBudgetsDetail(budgetId)
+  renderBudgetsDetail(budgetId);
   renderPengeluaran(budgetId);
 });
 
@@ -295,7 +349,7 @@ function addPengeluaran(data) {
 
   const budgetWithSpent = {
     ...currentBudget,
-    pengeluaran: [...currentSpent, data],
+    pengeluaran: [...currentSpent, { ...data, id: generateId() }],
   };
 
   const allBudgets = getExistingData();
@@ -304,11 +358,39 @@ function addPengeluaran(data) {
     if (budget.id == budgetId) {
       return budgetWithSpent;
     } else {
-      return budget
+      return budget;
     }
-  })
+  });
 
-  saveBudget(updatedBudgets)
+  saveBudget(updatedBudgets);
+}
+
+function updatePengeluaran(pengeluaranId, data) {
+  const budgetId = document
+    .querySelector("#budget_details .budget_card")
+    .getAttribute("data-budgetid");
+
+  const allBudgets = getExistingData();
+
+  const updatedBudget = allBudgets?.map((budget) => {
+    if (budget.id == budgetId) {
+      const pengeluaran = budget?.pengeluaran?.map((item) => {
+        if (item.id == pengeluaranId) {
+          return { ...data, id: item.id };
+        }
+        return item;
+      });
+
+      return {
+        ...budget,
+        pengeluaran,
+      };
+    }
+
+    return budget;
+  });
+
+  saveBudget(updatedBudget);
 }
 
 // Generate Id unik
@@ -318,11 +400,12 @@ function generateId() {
 
 // Calculate Sisa Budget
 function hitungSisaBudget(dataBudget) {
-  const totalPengeluaran = dataBudget.pengeluaran
-    ?.map((item) => +item.jumlah)
-    .reduce((jumlah, total) => jumlah + total) ?? 0
+  const totalPengeluaran =
+    dataBudget.pengeluaran
+      ?.map((item) => +item.jumlah)
+      .reduce((jumlah, total) => jumlah + total) ?? 0;
 
-  return +dataBudget.total - totalPengeluaran
+  return +dataBudget.total - totalPengeluaran;
 }
 
 // Format Satuan Rupiah
@@ -334,7 +417,6 @@ function formatRupiah(angka) {
   }).format(angka);
 }
 
-function saveBudget(budgets){
+function saveBudget(budgets) {
   localStorage.setItem("budgets", JSON.stringify(budgets));
-
 }

@@ -1,9 +1,11 @@
 [
     {
+        "id" : 2312312,
         "nama_budget" : "Makan & Minum",
         "total" : 100000,
         "pengeluaran" : [
             {
+                "id" : 2312312,
                 "nama_pengeluaran" : "Nasi Padang",
                 "tanggal" : "17-01-2024",
                 "jumlah" : 12000

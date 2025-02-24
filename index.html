@@ -80,15 +80,16 @@
                 <i class="ph-fill ph-x-circle"></i>
             </div>
             <form action="">
-                <label for="">Nama Pengeluaran</label>
-                <input name="nama_pengeluaran" type="text">
-                <label for="">Harga</label>
+                <input type="hidden" id="id_pengeluaran">
+                <label for="nama_pengeluaran">Nama Pengeluaran</label>
+                <input required id="nama_pengeluaran" name="nama_pengeluaran" type="text">
+                <label for="jumlah_pengeluaran">Harga</label>
                 <div class="input_money">
                     <span>Rp</span>
-                    <input name="jumlah" type="number">
+                    <input required id="jumlah_pengeluaran" name="jumlah" type="number">
                 </div>
-                <label for="">Tanggal</label>
-                <input name="tanggal" type="date">
+                <label for="tanggal_pengeluaran">Tanggal</label>
+                <input required id="tanggal_pengeluaran" name="tanggal" type="date">
                 <button>Simpan</button>
             </form>
         </div>
