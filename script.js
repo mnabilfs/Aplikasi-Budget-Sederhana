@@ -18,6 +18,13 @@ document.getElementById("delete_budget").addEventListener("click", () => {
   deleteBudget(budgetId)
 })
 
+document.getElementById("delete_pengeluaran").addEventListener("click", () => {
+  const budgetId = document.querySelector("#budget_details .budget_card").getAttribute("data-budgetid")
+  const pengeluaranId = document.getElementById("id_pengeluaran").value
+
+  deletePengeluaran(budgetId, pengeluaranId)
+})
+
 
 updateBudgetButton.addEventListener("click", () => {
   openUpdateBudget();
@@ -195,12 +202,15 @@ closeModalSpentBtn.addEventListener("click", () => {
 
 function openCreatePengeluaran() {
   document.querySelector("#spent_form h4").innerHTML = "Tambah Pengeluaran";
+  document.getElementById("delete_pengeluaran").classList.add("hidden")
+  
   resetInput();
   openModalPengeluaran();
 }
 
 function openUpdatePengeluaran(pengeluaranId, pengeluaran) {
   document.querySelector("#spent_form h4").innerHTML = "Update Pengeluaran";
+  document.getElementById("delete_pengeluaran").classList.remove("hidden")
 
   const currentPengeluaran = pengeluaran?.filter(
     (item) => item.id == pengeluaranId
@@ -423,6 +433,33 @@ function updatePengeluaran(pengeluaranId, data) {
   });
 
   saveBudget(updatedBudget);
+}
+
+function deletePengeluaran(budgetId, pengeluaranId) {
+
+  const allBudgets = getExistingData()
+  const confirmed = confirm("Yakin ingin menghapus pengeluaran?")
+
+  if(confirmed){
+    const afterDelete = allBudgets.map((budget) => {
+      if(budget.id == budgetId){
+        return {
+          ...budget,
+          pengeluaran: budget.pengeluaran.filter((pengeluaran) => pengeluaran.id != pengeluaranId)
+        }
+      }
+      return budget
+    })
+    
+  
+  saveBudget(afterDelete)
+  closeModalPengeluaran()
+  renderPengeluaran(budgetId)
+  showNotification("✅Pengeluaran berhasil dihapus")
+  
+}
+  closeModalPengeluaran()
+
 }
 
 // Generate Id unik
