@@ -68,7 +68,12 @@
                     <span>Rp</span>
                     <input id="total_budget" required name="total" type="number">
                 </div>
-                <button>Simpan</button>
+                <div class="action">
+                    <button id="delete_budget" class="danger" type="button">
+                        <i class="ph-fill ph-trash"></i>
+                    </button>
+                    <button type="submit">Simpan</button>
+                </div>
             </form>
         </div>
     </div>
@@ -90,7 +95,7 @@
                 </div>
                 <label for="tanggal_pengeluaran">Tanggal</label>
                 <input required id="tanggal_pengeluaran" name="tanggal" type="date">
-                <button>Simpan</button>
+                <button class="submit_spent" type="submit">Simpan</button>
             </form>
         </div>
     </div>

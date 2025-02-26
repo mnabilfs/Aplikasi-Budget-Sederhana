@@ -3,6 +3,7 @@
 :root {
   --color-placeholder: #d9d9d9;
   --color-text-primary: #4b4b4b;
+  --color-danger: rgb(242, 73 ,73);
   --card-radius: 1.5rem;
   --primary: #31509e;
   --color-text-secondary: #9e9e9e;
@@ -286,15 +287,38 @@ header h1 {
   padding-left: 3.2rem;
 }
 
+.modal form .action{
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.modal form .action:has( > .hidden){
+  flex-direction: row-reverse;
+}
+
+.modal form .action .danger{
+  padding: 0;
+  background-color: white;
+  color: var(--color-danger);
+  border: 2px solid var(--color-danger);
+  width: 4rem;
+  aspect-ratio: 1/1;
+}
+
+
 .modal form button{
   margin-top: 5px;
   padding: .8rem 2rem;
   font-size: 1.5rem;
-  float: right;
   border-radius: 10px;
   background-color: var(--primary);
   border: none;
   color: white;
+}
+
+.modal form .submit_spent{
+  float: right;
 }
 
 /* Notification */
