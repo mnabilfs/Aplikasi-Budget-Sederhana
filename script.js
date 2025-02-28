@@ -12,19 +12,21 @@ const notifications = document.getElementById("notifications");
 const updateBudgetButton = document.querySelector(
   "#budget_details .budget_card .icon"
 );
+const selectUrutan = document.getElementById("sort_pengeluaran");
 
 document.getElementById("delete_budget").addEventListener("click", () => {
-  const budgetId = document.getElementById("budget_id").value
-  deleteBudget(budgetId)
-})
+  const budgetId = document.getElementById("budget_id").value;
+  deleteBudget(budgetId);
+});
 
 document.getElementById("delete_pengeluaran").addEventListener("click", () => {
-  const budgetId = document.querySelector("#budget_details .budget_card").getAttribute("data-budgetid")
-  const pengeluaranId = document.getElementById("id_pengeluaran").value
+  const budgetId = document
+    .querySelector("#budget_details .budget_card")
+    .getAttribute("data-budgetid");
+  const pengeluaranId = document.getElementById("id_pengeluaran").value;
 
-  deletePengeluaran(budgetId, pengeluaranId)
-})
-
+  deletePengeluaran(budgetId, pengeluaranId);
+});
 
 updateBudgetButton.addEventListener("click", () => {
   openUpdateBudget();
@@ -39,8 +41,9 @@ function selectBudgetCardsAndButton() {
     card.addEventListener("click", () => {
       const budgetId = card.getAttribute("data-budgetId");
 
-      renderPengeluaran(budgetId);
       renderBudgetsDetail(budgetId);
+      const urutan = selectUrutan.value;
+      renderPengeluaran(budgetId, urutan);
       budgetsPage.classList.add("hidden");
       budgetsDetailPage.classList.remove("hidden");
     });
@@ -72,8 +75,19 @@ function renderBudgets() {
   selectBudgetCardsAndButton();
 }
 
-function renderPengeluaran(budgetId) {
+document.getElementById("sort_pengeluaran").addEventListener("change", (e) => {
+  const budgetId = document
+    .querySelector("#budget_details .budget_card")
+    .getAttribute("data-budgetid");
+  renderPengeluaran(budgetId, e.target.value);
+});
+
+function renderPengeluaran(budgetId, sortBy) {
   const { pengeluaran } = getBudgetById(budgetId);
+
+  const [index, type] = sortBy?.split("|");
+
+  sortPengeluaran(pengeluaran, index, type);
 
   // Debugging for error undefined pengeluaran
   // const budget = getBudgetById(budgetId);
@@ -113,6 +127,34 @@ function renderPengeluaran(budgetId) {
     });
 }
 
+function sortPengeluaran(pengeluaran, indexData, type) {
+  let perubahan = 0;
+  do {
+    perubahan = 0;
+    for (let i = 0; i < pengeluaran.length - 1; i++) {
+      const leftData =
+        indexData == "jumlah"
+          ? +pengeluaran[i][indexData]
+          : pengeluaran[i][indexData];
+      const rightData =
+        indexData == "jumlah"
+          ? +pengeluaran[i + 1][indexData]
+          : pengeluaran[i + 1][indexData];
+      if (
+        (type == "asc" && leftData > rightData) ||
+        (type == "desc" && leftData < rightData)
+      ) {
+        let temp = pengeluaran[i];
+        pengeluaran[i] = pengeluaran[i + 1];
+        pengeluaran[i + 1] = temp;
+        perubahan++;
+      }
+    }
+  } while (perubahan > 0);
+
+  return pengeluaran;
+}
+
 // Render BudgetsDetail
 function renderBudgetsDetail(budgetId) {
   const currentBudget = getBudgetById(budgetId);
@@ -138,14 +180,14 @@ function renderBudgetsDetail(budgetId) {
 
 // back to halaman utama
 backHomeBtn.addEventListener("click", () => {
-  showBudgetPage()
+  showBudgetPage();
   renderBudgets();
 });
 
-function showBudgetPage(){
+function showBudgetPage() {
   budgetsDetailPage.classList.add("hidden");
   budgetsPage.classList.remove("hidden");
-  renderBudgets()
+  renderBudgets();
 }
 
 // Close Modal Budget Form
@@ -166,7 +208,9 @@ function openCreateBudget() {
 
 function openUpdateBudget() {
   document.querySelector("#budget_form h4").innerHTML = "Update Budget";
-  document.querySelector("#budget_form button.danger").classList.remove("hidden");
+  document
+    .querySelector("#budget_form button.danger")
+    .classList.remove("hidden");
 
   const budgetId = document
     .querySelector("#budget_details .budget_card")
@@ -202,15 +246,15 @@ closeModalSpentBtn.addEventListener("click", () => {
 
 function openCreatePengeluaran() {
   document.querySelector("#spent_form h4").innerHTML = "Tambah Pengeluaran";
-  document.getElementById("delete_pengeluaran").classList.add("hidden")
-  
+  document.getElementById("delete_pengeluaran").classList.add("hidden");
+
   resetInput();
   openModalPengeluaran();
 }
 
 function openUpdatePengeluaran(pengeluaranId, pengeluaran) {
   document.querySelector("#spent_form h4").innerHTML = "Update Pengeluaran";
-  document.getElementById("delete_pengeluaran").classList.remove("hidden")
+  document.getElementById("delete_pengeluaran").classList.remove("hidden");
 
   const currentPengeluaran = pengeluaran?.filter(
     (item) => item.id == pengeluaranId
@@ -314,22 +358,20 @@ function updateBudget(dataBaru, budgetId) {
 }
 
 // delete budget
-function deleteBudget(budgetId){
- const allBudgets = getExistingData()
+function deleteBudget(budgetId) {
+  const allBudgets = getExistingData();
 
-  const confirmed = confirm("Apakah yakin ingin menghapus?")
-  if(confirmed) {
+  const confirmed = confirm("Apakah yakin ingin menghapus?");
+  if (confirmed) {
+    const deleteBudgets = allBudgets.filter((budget) => budget.id != budgetId);
 
-    const deleteBudgets = allBudgets.filter((budget) => budget.id != budgetId)
-    
-    saveBudget(deleteBudgets)
-    showNotification("✅Budget berhasil di hapus!")
-    closeModalBudget()
-     showBudgetPage()
+    saveBudget(deleteBudgets);
+    showNotification("✅Budget berhasil di hapus!");
+    closeModalBudget();
+    showBudgetPage();
   } else {
-    closeModalBudget()
+    closeModalBudget();
   }
-
 }
 
 // Submit form budget
@@ -376,7 +418,8 @@ document.querySelector("#spent_form form").addEventListener("submit", (e) => {
     `✅ Pengeluaran ${data.nama_pengeluaran} berhasil disimpan!`
   );
   renderBudgetsDetail(budgetId);
-  renderPengeluaran(budgetId);
+  const urutan = selectUrutan.value;
+  renderPengeluaran(budgetId, urutan);
 });
 
 // Tambah Pengeluaran
@@ -436,30 +479,29 @@ function updatePengeluaran(pengeluaranId, data) {
 }
 
 function deletePengeluaran(budgetId, pengeluaranId) {
+  const allBudgets = getExistingData();
+  const confirmed = confirm("Yakin ingin menghapus pengeluaran?");
 
-  const allBudgets = getExistingData()
-  const confirmed = confirm("Yakin ingin menghapus pengeluaran?")
-
-  if(confirmed){
+  if (confirmed) {
     const afterDelete = allBudgets.map((budget) => {
-      if(budget.id == budgetId){
+      if (budget.id == budgetId) {
         return {
           ...budget,
-          pengeluaran: budget.pengeluaran.filter((pengeluaran) => pengeluaran.id != pengeluaranId)
-        }
+          pengeluaran: budget.pengeluaran.filter(
+            (pengeluaran) => pengeluaran.id != pengeluaranId
+          ),
+        };
       }
-      return budget
-    })
-    
-  
-  saveBudget(afterDelete)
-  closeModalPengeluaran()
-  renderPengeluaran(budgetId)
-  showNotification("✅Pengeluaran berhasil dihapus")
-  
-}
-  closeModalPengeluaran()
+      return budget;
+    });
 
+    saveBudget(afterDelete);
+    closeModalPengeluaran();
+    const urutan = selectUrutan.value;
+    renderPengeluaran(budgetId, urutan);
+    showNotification("✅Pengeluaran berhasil dihapus");
+  }
+  closeModalPengeluaran();
 }
 
 // Generate Id unik
