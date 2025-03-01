@@ -12,6 +12,68 @@ const notifications = document.getElementById("notifications");
 const updateBudgetButton = document.querySelector(
   "#budget_details .budget_card .icon"
 );
+const body = document.getElementsByTagName("body")[0];
+
+// > code kelasfrontend.com not working <
+// function checkSystemTheme() {
+//   const darkTheme = window.matchMedia("(prefers-color-scheme : dark)");
+
+//   if (darkTheme.matches) {
+//     body.classList.add("dark");
+//     document.getElementById("light_theme_icon").classList.add("hidden");
+//     document.getElementById("dark_theme_icon").classList.remove("hidden");
+//   }
+// }
+
+// document.getElementById("theme_switch").addEventListener("click", () => {
+//   if (body.classList.contains("dark")) {
+//     document.getElementById("light_theme_icon").classList.remove("hidden");
+//     document.getElementById("dark_theme_icon").classList.add("hidden");
+//   } else {
+//     document.getElementById("light_theme_icon").classList.add("hidden");
+//     document.getElementById("dark_theme_icon").classList.remove("hidden");
+//   }
+// });
+
+// checkSystemTheme();
+
+// debugging error cant switch theme
+function checkSystemTheme() {
+  const darkTheme = window.matchMedia("(prefers-color-scheme : dark)");
+  const savedTheme = localStorage.getItem("theme");
+
+  if (savedTheme) {
+    body.classList.add(savedTheme);
+  } else if (darkTheme.matches) {
+    body.classList.add("dark");
+  }
+
+  updateThemeIcons();
+}
+
+function updateThemeIcons() {
+  if (body.classList.contains("dark")) {
+    document.getElementById("light_theme_icon").classList.add("hidden");
+    document.getElementById("dark_theme_icon").classList.remove("hidden");
+  } else {
+    document.getElementById("light_theme_icon").classList.remove("hidden");
+    document.getElementById("dark_theme_icon").classList.add("hidden");
+  }
+}
+
+document.getElementById("theme_switch").addEventListener("click", () => {
+  body.classList.toggle("dark");
+
+  // Simpan tema ke localStorage
+  localStorage.setItem("theme", body.classList.contains("dark") ? "dark" : "");
+
+  updateThemeIcons();
+});
+
+// Panggil fungsi saat halaman dimuat
+checkSystemTheme();
+
+
 const selectUrutan = document.getElementById("sort_pengeluaran");
 
 document.getElementById("delete_budget").addEventListener("click", () => {

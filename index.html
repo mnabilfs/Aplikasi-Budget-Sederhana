@@ -10,10 +10,14 @@
     <script src="https://unpkg.com/@phosphor-icons/web@2.1.1"></script>
 </head>
 
-<body>
+<body class="">
     <div id="notifications" class="notification-wapper"></div>
     <!-- Header -->
     <header class="container">
+        <button id="theme_switch" class="theme_switch">
+            <i id="dark_theme_icon" class="ph-fill ph-moon hidden"></i>
+            <i id="light_theme_icon" class="ph-fill ph-sun"></i>
+        </button>
         <img src="img/bag.png" alt="">
         <h1>Budgetku.</h1>
     </header>
@@ -95,7 +99,7 @@
                 </div>
                 <label for="tanggal_pengeluaran">Tanggal</label>
                 <input required id="tanggal_pengeluaran" name="tanggal" type="date">
-                <div class="action">   
+                <div class="action">
                     <button id="delete_pengeluaran" class="danger" type="button">
                         <i class="ph-fill ph-trash"></i>
                     </button>
