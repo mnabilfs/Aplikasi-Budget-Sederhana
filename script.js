@@ -160,6 +160,7 @@ function renderPengeluaran(budgetId, sortBy) {
   //   return;
   // }
 
+
   const listPengeluaran =
     pengeluaran
       ?.map((item) => {
@@ -190,6 +191,10 @@ function renderPengeluaran(budgetId, sortBy) {
 }
 
 function sortPengeluaran(pengeluaran, indexData, type) {
+  if (!pengeluaran) {
+    return []
+  }
+  
   let perubahan = 0;
   do {
     perubahan = 0;
@@ -576,7 +581,7 @@ function hitungSisaBudget(dataBudget) {
   const totalPengeluaran =
     dataBudget.pengeluaran
       ?.map((item) => +item.jumlah)
-      .reduce((jumlah, total) => jumlah + total) ?? 0;
+      .reduce((jumlah, total) => jumlah + total, 0) ?? 0;
 
   return +dataBudget.total - totalPengeluaran;
 }
